@@ -1,0 +1,49 @@
+{% extends "layout.html" %} {% block info_nav%}
+
+<li class="active">
+  <a href="/index"><span class="fa fa-info-circle mr-3"></span> Information</a>
+</li>
+
+{% endblock %} {% block content %}
+
+<h1 class="display-5">EnrichKit</h1>
+<p class="lead">
+  It is essential to obtain proper interpretations of genomic signals derived in
+  multi-omics studies. <br />
+  EnrichKit provides three user friendly interfaces to help with biologically
+  interpreting genomics signals.
+</p>
+
+<ol>
+  <li class="lead">
+    <strong class="a-species">ID mapping.</strong> <br />
+    Given a list of gene id of one type (any of ensembl gene id, entrez id, or
+    gene symbol). Return the other two type of id. <br />
+    Also, return human orthologous genes ids (all of ensembl gene id, entrez id,
+    or gene symbol).
+  </li>
+  <br />
+  <li class="lead">
+    <strong class="a-species">Coordinates association.</strong> <br />
+    Given a list of genome coordinates-based signals, try to associate each of
+    them with a proximal gene feature appearing in the genome annotation file.
+  </li>
+  <br />
+  <li class="lead">
+    <strong class="a-species">Over-representation analysis.</strong> <br />
+    Given a set of interesting genes (significant genes and total genes),
+    perform functional characterizations over popular databases.
+  </li>
+</ol>
+
+<p class="lead">
+  This web app is specifically designed for major farm animal species.
+</p>
+<!-- <p class="lead">
+  Currently, only
+  <a class="a-species" href="https://uswest.ensembl.org/Bos_taurus/Info/Index">
+    <strong>cow genome</strong>
+  </a>
+  is supported.
+</p> -->
+{% endblock %}

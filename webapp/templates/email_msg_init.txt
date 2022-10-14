@@ -1,0 +1,13 @@
+Hello,
+
+Thank you for using EnrichKit!
+
+We have recieved you analysis request on {{ time }}.
+
+We will get back to you with your results shortly.
+
+Your job unique id is {{ jobid }}.
+
+PLEASE DO NOT REPLY TO THIS EMAIL.
+
+EnrichKit Team

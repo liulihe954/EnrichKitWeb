@@ -1,0 +1,118 @@
+{% extends 'layout.html' %} {% block idmap_nav %}
+
+<li class="active">
+  <a href="/idmap"
+    ><span class="fa fa-arrow-right-arrow-left mr-3"></span> ID Conversion
+  </a>
+</li>
+
+{% endblock %} {% block content %}
+<div
+  style="
+    background-color: #ececec;
+    height: 40px;
+    width: 140px;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <a href="/idmap"
+    ><span style="color: black; font-size: 15pt"
+      ><i class="fa-solid fa-angle-left"></i> Go Back</span
+    ></a
+  >
+</div>
+<br />
+<br />
+
+<div style="display: flex; justify-content: start; align-items: center">
+  <!-- <div style="text-align: center; border-radius: 6px; display: flex"> -->
+  <h1 class="display-5" style="margin-bottom: 0">Results</h1>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {% if missing_count.0 != 0%}
+
+  <h4 style="color: rgb(216, 104, 12); text-align: center; margin-bottom: 0">
+    <i class="fas fa-exclamation-triangle"></i>
+    {{missing_count.0}} input ID failed to match any record
+  </h4>
+  {% else %}
+  <h4
+    style="color: rgba(5, 162, 34, 0.803); text-align: center; margin-bottom: 0"
+  >
+    <i class="fa fa-check-circle" aria-hidden="true"></i> All inputs matched
+  </h4>
+  {% endif %}
+  <!-- </div> -->
+</div>
+<br />
+<h3>
+  <div>
+    <a href="{{target_url}}" class="btn btn-primary btn-lg active" role="button"
+      >Download Results</a
+    >
+  </div>
+</h3>
+
+<div>
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+      <table id="table" class="hover row-border stripe">
+        <thead>
+          <tr style="background: #dbdbdb; color: rgb(6, 6, 6)">
+            <th>Ensembl Id</th>
+            <th>Ensembl Symbol</th>
+            <th>Entrez ID</th>
+            <th>NCBI Symbol</th>
+            <th>VGNC Symbol</th>
+            <th>Human Orthologous</th>
+            <th>Human Entrez</th>
+            <th>HGNC</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in queryset %}
+          <tr>
+            <th style="font-weight: normal">{{obj.gene_id}}</th>
+            <th style="font-weight: normal">{{obj.ensembl_symbol}}</th>
+            <th style="font-weight: normal">{{obj.entrez_id}}</th>
+            <th style="font-weight: normal">{{obj.ncbi_symbol}}</th>
+            <th style="font-weight: normal">{{obj.vgnc_symbol}}</th>
+            <th style="font-weight: normal">{{obj.human_gene_id}}</th>
+            <th style="font-weight: normal">{{obj.human_entrez_id}}</th>
+            <th style="font-weight: normal">{{obj.hgnc_symbol}}</th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- <div>{% for obj in queryset %} <p>ddd</p></a>{{obj.gene_id}} {{obj.entrez_id}} {% endfor %}</div> -->
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"
+></script>
+<script>
+  var table = $("#table").DataTable({
+    scrollY: "65vh",
+    scrollCollapse: true,
+    paging: false,
+  });
+
+  $("#container").css("display", "block");
+  table.columns.adjust().draw();
+</script>
+{% endblock %}

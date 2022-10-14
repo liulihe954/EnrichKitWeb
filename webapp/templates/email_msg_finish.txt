@@ -1,0 +1,13 @@
+Hello,
+
+Thank you for your patience!
+
+We have finished analyzing your data.
+
+To view your results, please follow {{ view_link }}.
+
+To download your results in csv format, please follow {{ download_link }}.
+
+PLEASE DO NOT REPLY TO THIS EMAIL.
+
+EnrichKit Team

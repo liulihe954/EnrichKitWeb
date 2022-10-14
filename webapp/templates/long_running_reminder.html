@@ -1,0 +1,30 @@
+{% extends 'layout.html' %} {% block content %}
+<div
+  style="
+    background-color: #ececec;
+    height: 40px;
+    width: 140px;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <a onclick="history.back()" class="btn"
+    ><span style="color: black; font-size: 15pt"
+      ><i class="fa-solid fa-angle-left"></i> Go Back</span
+    ></a
+  >
+</div>
+<br />
+<br />
+
+<h4 style="color: rgb(216, 104, 12);">
+  <i class="fas fa-exclamation-triangle"></i>
+  Please provide you email address.<br>
+  You have provided a potential long running job. <br>
+  We would push it to our task queue and get back to you with results.<br>
+</h4>
+
+{% endblock %}

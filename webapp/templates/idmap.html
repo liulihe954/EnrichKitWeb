@@ -1,0 +1,67 @@
+{% extends 'layout.html' %} {% block idmap_nav %}
+
+<li class="active">
+  <a href="/idmap"
+    ><span class="fa fa-arrow-right-arrow-left mr-3"></span> ID Conversion
+  </a>
+</li>
+
+{% endblock %} {% block content %}
+<h1 class="display-5">ID Conversion</h1>
+<p class="lead">
+  Gene ID conversion will facilitate the identification of the same gene cross
+  different databases, thus helping will with reducing noise and improving
+  precision.
+</p>
+
+<form
+  enctype="multipart/form-data"
+  action="."
+  role="form"
+  method="post"
+  id="service-form"
+>
+  {% csrf_token %}
+
+  <div><h4>1. Select Species</h4></div>
+
+  <div>{{form.species}}</div>
+
+  <br /><br />
+  <div><h4>2. Select ID Type</h4></div>
+
+  <div>{{form.gene_type}}</div>
+  <br /><br />
+  <div><h4>3. Input Gene List</h4></div>
+
+  <div>
+    <p>One entry per line.</p>
+  </div>
+
+  <div>{{form.input_gene_list}}</div>
+
+  <div>{{form.input_id_file}}</div>
+  <br />
+  <div style="position: relative; z-index: 4000">
+    <input type="submit" class="btn btn-info" value="START" />
+  </div>
+</form>
+<script>
+  const form = document.getElementById("service-form");
+  form.addEventListener("submit", () => {
+    // const message = document.querySelector("loci-form");
+    document.querySelector(".overlay").style.display = "inline";
+    document.querySelector(".loader").style.display = "inline";
+    fetch(".", {
+      method: "post",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({ message: document.querySelector("service-form") }),
+    });
+  });
+</script>
+{% endblock %}
