@@ -44,7 +44,7 @@ Currently, there are three functions available.
 
 Genomics/genetics analysis often need to process lists of genes arising from various studies, where database-specific identifiers (IDs) are commonly used to uniquely refer to each gene. However, the correspondence (of the same gene entity) between different databases are sometimes incomplete and/or out-dated due to various reasons. In order to better integrate information from multiple sources/databases, a stable and convenient ID conversion tool that based on the most up-to-date data is necessary.
 
-Here we developed a web ID conversion service that relies on Ensembl as a primary data source, and regularly updates the correspondence between Ensembl (Ensembl ID), NCBI (Entrez ID), Vertebrate Gene Nomenclature Committee (VGNC) and HUGO Gene Nomenclature Committee (HGNC; if orthologs exist), using public available database.
+Here we developed a web ID conversion service that relies on Ensembl as a primary data source, and regularly updates the correspondence between Ensembl ([Ensembl ID](https://uswest.ensembl.org/info/genome/stable_ids/index.html)), NCBI ([Entrez ID](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1761442/#:~:text=Entrez%20Gene%20provides%20unique%20integer,E%2DUtilities%20(1).)), Vertebrate Gene Nomenclature Committee ([VGNC](https://vertebrate.genenames.org/tools/search/#!/genes)) and HUGO Gene Nomenclature Committee ([HGNC](https://www.genenames.org/tools/search/#!/?query=&rows=20&start=0&filter=document_type:gene); if orthologs exist). See [Data Source](#data-source)
 
 To use the tool, users are required to format the input as one single column, one ID (either Ensembl ID or Entrez ID) per line, no separator between lines, for example:
 
