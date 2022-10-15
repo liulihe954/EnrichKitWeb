@@ -70,9 +70,9 @@ Note an empty field indicates missing/non-existing data.
 
 ### Genomic coordinates matching
 
-In multi-omics studies, the signals based on genomic coordinates often need to be mapped to a proximal gene and/or annotated gene feature in order to better understand gene expression regulation. For example, DNA methylation events (various types of Methyl-seq), chromatin accessibility measurement (DNase-seq or ATAC-seq) and TF binding or histone modifications events (ChIP-seq).
+In multi-omics studies, the signals based on genomic coordinates often need to be mapped to a proximal gene and/or annotated gene feature in order to better understand gene expression regulation. For example, DNA methylation events (various types of Methyl-seq), chromatin accessibility measurement (DNase-seq or ATAC-seq) and TF binding or histone modifications events (ChIP-seq). 
 
-Here, we propose a model for genomic features and a tool to map genomic coordinates to gene feature(s).
+Here, we provide such funtion that can match a given genomic coordinate (chromosome + target position) to gene feature(s). The following model is used to define gene features.
 
 <img align="center" src="./static/img/gene_feature.png" alt=" " width="100%" /> &nbsp;
 
@@ -85,7 +85,7 @@ Here, we propose a model for genomic features and a tool to map genomic coordina
 - TTS (transcription termination site): intergenic region downstream/adjacent of the last exon (default length 200 bp)
 - Downstream: intergenic region downstream/adjacent of the last exon (default length 10k bp)
 
-To use the tool, users are required to format the input as one single column, one position/coordinate per line, no separator between lines; each position should have a chromosome number and a base pair count, for example:
+To use the tool, users are required to format the input as one single column, one coordinate per line, no separator between lines; each coordinate should have a chromosome number and a target position, for example:
 
 ```
 1:140285514
@@ -97,20 +97,19 @@ To use the tool, users are required to format the input as one single column, on
 The returned results will have 8 columns:
 
 - Input Chromosome: chromosome number
-- Input Coordinate: base pair count
+- Input Position: base pair count
 - Feature type: current feature type
-- Feature name: current feature type
-- Transcript: if exonic regions, this column shows the corresponding transcript ID
+- Feature name: current feature name
+- Transcript: if the matched feature is exonic region, this column shows the corresponding transcript ID
 - Gene ID: the associated Gene ID (Ensembl ID)
 - Gene Biotype: the biotype recorded in Ensembl annotation
-- Gene Strand: strand
+- Gene Strand: gene strand
 
 Note, if the current position failed to match any feature, "intergeneric or out of bound" will show up.
 
 ### Over-representation Analysis
 
-Over-representation analysis is an intuitive statistical method using Fisher’s exact test that determines whether genes from pre-defined sets are present more than expected (test of
-proportions based on the hypergeometric distribution) in a subset (significant gene) of full gene list (total gene). Significant genes could be derived from differentially expressed genes, genes flagged by significant SNPs from whole-genome scans, genes in non-preserved co-expression modules, etc..
+Over-representation analysis is an intuitive statistical method using Fisher’s exact test that determines whether genes from pre-defined sets are present more than expected (test of proportions based on the hypergeometric distribution) in a subset (significant gene) of full gene list (total gene). Significant genes could be derived from differentially expressed genes, genes flagged by significant SNPs from whole-genome scans, genes in non-preserved co-expression modules, etc..
 
 <img align="center" src="./static/img/README-Enrich_Illustration.png" alt=" " width="100%" /> &nbsp;
 
@@ -165,7 +164,7 @@ Gene annotation are directly downloaded from [Ensembl FTP site](http://ftp.ensem
 
 ### Gene ID Information
 
-All Gene ID correspondences are obtained from public databases via FTP download, REST APT and/or HTTP responses.
+All Gene ID correspondences are obtained from public databases via FTP download, REST APT and/or web scraping.
 
 Specifically,
 
@@ -198,4 +197,4 @@ After joining data from the above sources, [Ensembl REST API](https://rest.ensem
 
 ## Contacts
 
-EnrichKit is developed by the [Quantitative Genomics & Computational Biology lab](http://fpenagaricano-lab.org/) at the Department of Animal and Dairy Sciences, University of Wisconsin - Madison.
+EnrichKit is developed by the [Quantitative Genomics & Computational Biology lab](http://fpenagaricano-lab.org/) at the [Department of Animal and Dairy Sciences](https://andysci.wisc.edu/), University of Wisconsin - Madison.
