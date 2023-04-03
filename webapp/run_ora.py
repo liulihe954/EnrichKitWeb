@@ -151,7 +151,8 @@ def ora_each_db(cur_species, db, sig_gene, total_gene, type='main'):
         if len(result['ek_gene__gene_id']) >  0:
             pathway_dict[(result['ek_pathway__pathway_id'], result['ek_pathway__pathway_description'])].append(result['ek_gene__gene_id'])
         if cc % 10000 == 0:
-            print('processed %d' % cc)
+            continue
+            # print('processed %d' % cc)
     #
     if type == 'main':
         for k, v in pathway_dict.items():

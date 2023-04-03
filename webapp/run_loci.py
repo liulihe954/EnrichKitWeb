@@ -69,9 +69,9 @@ def loci_match_unit(cur_species, cur_feature_list, cur_cfeature_list, cur_chr, c
             end__gte = cur_loci - upstream_length
         )
 
-    print('cur_species - ', cur_species)
-    print('cur_chr - ', cur_chr)
-    print('cur_loci - ', cur_loci)
+    # print('cur_species - ', cur_species)
+    # print('cur_chr - ', cur_chr)
+    # print('cur_loci - ', cur_loci)
 
     #
     if not gene_target.exists():
