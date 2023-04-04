@@ -11,6 +11,7 @@ import base64
 import itertools
 import ssl
 import certifi
+import re
 from urllib.request import urlopen
 
 
@@ -22,9 +23,10 @@ from pathlib import Path
 from collections import defaultdict
 from celery import shared_task, group
 
-from webapp.myforms import My_idmap_Form, My_Loci_Form, My_ORA_Form
+from webapp.myforms import My_idmap_Form, My_Loci_Form, My_ORA_Form, My_Loci_Aggreg_Form
 from webapp.run_loci import loci_match_unit, handle_loci_long_request
 from webapp.run_ora import ora_each_path, ora_each_db, handle_ora_long_request
+from webapp.run_aggreg import handle_loci_aggreg_request
 from webapp.push_s3 import push_s3
 from webapp.process_results import process_results
 from webapp.register_job import register_job
@@ -45,8 +47,6 @@ def show_info(request):
 
 def show_contacts(request):
     return render(request, 'contacts.html')
-
-# id map
 
 @csrf_exempt
 def id_map(request):
@@ -105,7 +105,6 @@ def id_map(request):
     if request.method == 'GET':
         form = My_idmap_Form()
         return render(request, 'idmap.html', {'form': form})
-
 
 @csrf_exempt
 def loci_match(request):
@@ -187,9 +186,150 @@ def loci_match(request):
         form = My_Loci_Form()
         return render(request, 'loci.html', {'form': form})
 
+@csrf_exempt
+def loci_aggreg(request):
+    if request.method == 'POST':
+        # handle_loci_file()
+        output = []
+        long_running_thres = 100
+        err_message = 'INVALID FORMAT. PLEASE DOUBLE CHECK.'
+        no_email_message = 'You have submitted a potential long-running job. \n Please provide you email address.'
+        #
+        cur_species = request.POST.getlist('species')[0]
+        cur_loci_list = request.POST.getlist('input_loci_list')
+        cur_methods_list = request.POST.getlist('input_methods_list')
+        user_email = request.POST.getlist('email')
+
+        #
+        if len(request.FILES) > 0:
+            cur_loci_list = []
+            for line in request.FILES['input_loci_file']:
+                cur_loci_list.append(line.decode())
+        else:
+            cur_loci_list = request.POST.get('input_loci_list').rstrip().split('\r\n')
+
+        # print(cur_loci_list)
+        
+        if len(cur_loci_list[-1]) == 0:
+            cur_loci_list = cur_loci_list[:-1]
+
+        # print(cur_loci_list)
+
+        # reject long input
+        if user_email[0] == '' and len(cur_loci_list) >= long_running_thres:
+            return render(request, 'long_running_reminder.html')
+
+        # #####
+        cur_chr_list = []
+        cur_coord_list = []
+        cur_pval_list = []
+
+        for item in cur_loci_list:
+            try:
+                tmp = re.split(':|,',item)
+                cur_chr_list.append(tmp[0])
+                cur_coord_list.append(int(tmp[1]))
+                cur_pval_list.append(float(tmp[2]))
+            except:
+                return render(request, 'loci_aggreg.html', {'err': err_message})
+        
+        # print(cur_chr_list)
+        # print(cur_coord_list)
+        # print(cur_pval_list)
+
+        # check different length
+        if not (len(cur_chr_list) == len(cur_coord_list) == len(cur_pval_list)):
+            return render(request, 'loci_aggreg.html', {'err': err_message})
+
+
+        # register job
+        jobid = register_job(user_email, cur_species, cur_methods_list, cur_loci_list)
+
+        # parallel - async way
+        # print('ready to handle_loci_long_request')
+        handle_loci_aggreg_request.delay(cur_species, cur_methods_list, cur_chr_list, cur_coord_list, cur_pval_list, jobid, user_email[0])
+        
+        # print('done handle_loci_long_request')
+        return render(request, 'loci_aggreg_out_async.html', {'jobid': jobid, 'user_email': user_email[0]})
+
+    if request.method == 'GET':
+        form = My_Loci_Aggreg_Form()
+        return render(request, 'loci_aggreg.html', {'form': form})
 
 @csrf_exempt
 def run_ora(request):
+    template = 'ora.html'
+    if request.method == 'POST':
+        print('received post ')
+        
+        err_message = 'INVALID FORMAT. PLEASE DOUBLE CHECK.'
+        no_email_message = 'You have submitted a potential long-running job. \n Please provide you email address.'
+
+        cur_species = request.POST.get('species')
+        cur_db_list = request.POST.getlist('input_db_list')
+        user_email = request.POST.getlist('email')
+
+        if len(request.FILES) > 0:
+            cur_gene_list = []
+            for line in request.FILES['input_gene_file']:
+                cur_gene_list.append(line.decode().strip())
+        else:
+            cur_gene_list = request.POST.get('input_gene_list').rstrip().split('\r\n')
+
+        if len(cur_gene_list) == 0:
+            cur_gene_list = cur_gene_list[:-1]
+
+        # reject long input
+        if (len(cur_db_list) > 1 or 'msigdb' in cur_db_list) and user_email[0] == '':
+            return render(request, 'long_running_reminder.html')
+
+        # process input gene list
+        sig_gene = []
+        total_gene = []
+        for item in cur_gene_list:
+            try:
+                tmp_gene_id = item.split(',')[0]
+                tmp_gene_sig = int(item.split(',')[1])
+            except Exception:
+                return render(request, template, {'err': err_message})
+            #
+            total_gene.append(tmp_gene_id)
+            if int(tmp_gene_sig) == 1:
+                sig_gene.append(tmp_gene_id)
+            # dedup
+            sig_gene = list(set(sig_gene))
+            total_gene = list(set(total_gene))
+
+        output_all = []
+        
+        # print('cur_db_list ', cur_db_list)
+
+        # register job
+        jobid = register_job(user_email[0], cur_species, cur_db_list, cur_gene_list)
+
+        # deal with input
+        if len(cur_db_list) == 1 and 'msigdb' not in cur_db_list: # 
+
+            output_all = ora_each_db(cur_species, cur_db_list[0], sig_gene, total_gene)
+            target_url = push_s3(
+                output_all,
+                ['Term ID', 'Source', 'Term Description', 'DB_Loss Total', 'DB_Loss Sig', 'Sig Gene Count', 'Total Gene Count', 'Hit Percentage', 'P value', 'Hit Gene List'],
+                jobid, '')
+            return render(request, 'ora_out.html', {'output': output_all, 'target_url': target_url})
+
+        else:
+            out = handle_ora_long_request.delay(cur_db_list, cur_species, sig_gene, total_gene, jobid, user_email[0])
+
+            # print('seeking id from main ', out.id)
+            
+            return render(request, 'ora_out_async.html', {'jobid': jobid, 'user_email': user_email[0]})
+
+    if request.method == 'GET':
+        form = My_ORA_Form()
+        return render(request, template, {'form': form})
+
+@csrf_exempt
+def run_gsea(request):
     template = 'ora.html'
     if request.method == 'POST':
         print('received post ')

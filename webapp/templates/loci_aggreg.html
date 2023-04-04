@@ -1,0 +1,97 @@
+{% extends 'layout.html' %} {% block loci_aggreg %}
+
+<li class="active">
+  <a href="/loci_aggreg"
+    ><span class="fa fa-magnifying-glass mr-3"></span> Loci Aggregation </a
+  >
+</li>
+{% endblock %} {% block content %}
+<div>
+  <h1 class="display-5">Loci Aggregation</h1>
+  <p class="lead">
+    Aggregate a list of nucleotide-level P-values to a list of proximal genes.
+  </p>
+
+  {% if err %}
+  <h2><p style="color: red">{{err}}</p></h2>
+  {% endif %} {% if test %}
+  <h2><p style="color: red">{{test}}</p></h2>
+  {% endif %}
+
+  <form
+    enctype="multipart/form-data"
+    action="."
+    role="form"
+    method="post"
+    id="service-form"
+  >
+    {% csrf_token %}
+
+    <div><h4>1. Select Species</h4></div>
+
+    <div>{{form.species}}</div>
+
+    <br /><br />
+    <div><h4>2. Select Aggregation Approach</h4></div>
+    <div>
+      <p>
+        Multiple selections will yield extra columns in the final results.
+      </p>
+    </div>
+
+    <div style="column-count: 1">
+      {{form.input_methods_list}}
+    </div>
+
+    <br /><br />
+    <div><h4>3. Input Loci List with P-value</h4></div>
+
+    <div>
+      <p>
+        Pleae follow such format: <br />
+        chromosome:coordinates,p-value<br />
+        e.g., 1:356783,0.005
+      </p>
+      <p>One entry per line.</p>
+    </div>
+
+    <div>{{form.input_loci_list}}</div>
+    <div>{{form.input_loci_file}}</div>
+
+    <br />
+    <div><h4>4. Contact Information</h4></div>
+    <p>
+      To reduce waiting time, we would offer potential long-running jobs to our
+      task queue. <br />
+      Please provide your email address to get notification about your
+      analysis.<br />
+    </p>
+    <div>{{form.email}}</div>
+    <br />
+    {% if not err %}
+    <div style="position: relative; z-index: 4000">
+      <input id="search-btn" type="submit" class="btn btn-info" value="START" />
+    </div>
+    {% endif %}
+  </form>
+</div>
+<script>
+  const form = document.getElementById("service-form");
+  form.addEventListener("submit", () => {
+    // const message = document.querySelector("loci-form");
+    document.querySelector(".overlay").style.display = "inline";
+    document.querySelector(".loader").style.display = "inline";
+    fetch(".", {
+      method: "post",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({ message: document.querySelector("service-form") }),
+    });
+  });
+</script>
+
+{% endblock %}

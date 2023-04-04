@@ -43,6 +43,8 @@ urlpatterns = [
     path('loci/', views.loci_match),
     path('ora/', views.run_ora),
     path('idmap/', views.id_map),
+    path('loci_aggreg/', views.loci_aggreg),
+    path('gsea/', views.run_gsea),
 
     # contacts
     path('contacts/', views.show_contacts),

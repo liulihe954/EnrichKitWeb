@@ -10,13 +10,13 @@
 <p class="lead">
   It is essential to obtain proper interpretations of genomic signals derived in
   multi-omics studies. <br />
-  EnrichKit provides three user friendly interfaces to help with biologically
+  EnrichKit provides several friendly interfaces to help with biologically
   interpreting genomics signals.
 </p>
 
 <ol>
   <li class="lead">
-    <strong class="a-species">ID mapping.</strong> <br />
+    <strong class="a-species">ID mapping</strong> <br />
     Given a list of gene id of one type (any of ensembl gene id, entrez id, or
     gene symbol). Return the other two type of id. <br />
     Also, return human orthologous genes ids (all of ensembl gene id, entrez id,
@@ -24,14 +24,25 @@
   </li>
   <br />
   <li class="lead">
-    <strong class="a-species">Coordinates association.</strong> <br />
+    <strong class="a-species">Coordinates association</strong> <br />
     Given a list of genome coordinates-based signals, try to associate each of
     them with a proximal gene feature appearing in the genome annotation file.
   </li>
   <br />
   <li class="lead">
-    <strong class="a-species">Over-representation analysis.</strong> <br />
+    <strong class="a-species">P-value Aggregation</strong> <br />
+    Aggregate a list of nucleotide-level P-values to a list of proximal genes.
+  </li>
+  <br />
+  <li class="lead">
+    <strong class="a-species">Over-representation analysis</strong> <br />
     Given a set of interesting genes (significant genes and total genes),
+    perform functional characterizations over popular databases.
+  </li>
+   <br />
+  <li class="lead">
+    <strong class="a-species">Gene Set Enrichment Analysis (GSEA)</strong> <br />
+    Given a set of interesting genes with P-values,
     perform functional characterizations over popular databases.
   </li>
 </ol>
