@@ -17,7 +17,7 @@
 - [Functions and Usage](#functions-and-usage)
   - [ID Conversion](#id-conversion)
   - [Genomic Coordinates Matching](#genomic-coordinates-matching)
-  - [P-value Aggregation (nucleotide to gene)](#p-value-aggregation-(nucleotide-to-gene))
+  - [P-value Aggregation (nucleotide to gene)](#p-value-aggregation)
   - [Over-Representation Analysis](#over-representation-analysis)
   - [Gene Set Enrichment Analysis](#gene-set-enrichment-analysis)
 - [Data Source](#data-source)
@@ -109,7 +109,7 @@ The returned results will have 8 columns:
 
 Note, if the current position failed to match any feature, "intergeneric or out of bound" will show up.
 
-### P-value Aggregation (nucleotide to gene)
+### P-value Aggregation
 The goal of P-value aggregation is to combine a set of nucleotide-level signals to generate an single aggregated P-value for a proximal gene (within or near). Note we assume that the P-values P<sub>i</sub> are independent and uniformly distributed under their null hypotheses although the independence assumption may be violated because of linkage disequilibrium, for example, multiple SNPs in a single gene.
 
 There are currently four methods available.
