@@ -17,7 +17,9 @@
 - [Functions and Usage](#functions-and-usage)
   - [ID Conversion](#id-conversion)
   - [Genomic Coordinates Matching](#genomic-coordinates-matching)
+  - [P-value Aggregation (nucleotide to gene)](#p-value-aggregation)
   - [Over-Representation Analysis](#over-representation-analysis)
+  - [Gene Set Enrichment Analysis](#gene-set-enrichment-analysis)
 - [Data Source](#data-source)
   - [Genome Annotation](#genome-annotation)
   - [Gene ID Information](#gene-id-information)
@@ -107,6 +109,19 @@ The returned results will have 8 columns:
 
 Note, if the current position failed to match any feature, "intergeneric or out of bound" will show up.
 
+### P-value Aggregation (nucleotide to gene)
+The goal of P-value aggregation is to combine a set of nucleotide-level signals to generate an single aggregated P-value for a proximal gene (within or near). Note we assume that the P-values P<sub>i</sub> are independent and uniformly distributed under their null hypotheses although the independence assumption may be violated because of linkage disequilibrium, for example, multiple SNPs in a single gene.
+
+There are currently four methods available.
+
+- [Fisher's combination test](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.combine_pvalues.html)
+- [Sidak's combination test (the best SNP)](https://www.statsmodels.org/dev/generated/statsmodels.stats.multitest.multipletests.html)
+- [Simes' combination test](https://rdrr.io/cran/mppa/man/simes.test.html)
+- [The FDR method](https://www.statsmodels.org/dev/generated/statsmodels.stats.multitest.multipletests.html)
+
+Users can choose to apply multiple methods (extra methods will yield extra columns in the output).
+
+
 ### Over-representation Analysis
 
 Over-representation analysis is an intuitive statistical method using Fisher’s exact test that determines whether genes from pre-defined sets are present more than expected (test of proportions based on the hypergeometric distribution) in a subset (significant gene) of full gene list (total gene). Significant genes could be derived from differentially expressed genes, genes flagged by significant SNPs from whole-genome scans, genes in non-preserved co-expression modules, etc..
@@ -146,6 +161,23 @@ The returned results will have 8 columns:
 - findG: enumerating **k**, significant genes found in the pathway
 - hitsPerc: **k/m**, percentage of significant genes
 <!-- - **adj.pvalue**: adjusted Pvalue (multiple testing correction) -->
+
+### Gene Set Enrichment Analysis
+Gene Set Enrichment Analysis (GSEA) is performed using the [gseapy](https://gseapy.readthedocs.io/en/latest/introduction.html) framework with livestock pathways (see [Data Source](#data-source)).
+
+The output format largely inherits gseapy output [format](https://gseapy.readthedocs.io/en/latest/run.html).
+- Term ID: pathway/term ID
+- Source: the source database name
+- Term Description: pathway/term description
+- ES: enrichment score
+- NES: normalized enrichment score
+- P value: nominal p-value (from the null distribution of the gene set
+- FDR: FDR qvalue (adjusted False Discory Rate)
+- FWERP: Family wise error rate p-values
+- TAG%: percent of gene set before running enrichment peak (ES),
+- Gene%: Percent of gene list before running enrichment peak (ES)
+- Lead Genes: leading edge genes (gene hits before running enrichment peak)
+- Matched Genes: genes matched to the data
 
 ## Data Source
 

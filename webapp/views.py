@@ -112,6 +112,10 @@ def loci_match(request):
         cur_feature_list = request.POST.getlist('input_features')
         cur_cfeature_list = request.POST.getlist('computed_features')
         user_email = request.POST.getlist('email')
+
+        test_input = request.POST.get('upstream_user_input')
+        print(request.POST)
+        print('test_input - ',test_input)
         
         #
         if len(request.FILES) > 0:
@@ -334,7 +338,7 @@ def run_gsea(request):
         cur_species = request.POST.get('species')
         cur_db_list = request.POST.getlist('input_db_list')
         user_email = request.POST.getlist('email')
-
+        
         if user_email[0] == '':
             return render(request, 'long_running_reminder.html')
 

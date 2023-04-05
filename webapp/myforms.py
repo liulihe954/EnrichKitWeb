@@ -1,5 +1,5 @@
 from django import forms
-
+from django.utils.safestring import mark_safe
 
 class My_Loci_Form(forms.Form):
     # SPECIES
@@ -21,10 +21,13 @@ class My_Loci_Form(forms.Form):
         ('transcript', 'Transcript')
     ]
     COMPUTATED_FEATURE_CHOICES = [
-        ('upstream', 'Upstream (10k bp default)'),
-        ('downstream', 'Downstream (10k bp default)'),
-        ('splice donor', 'Splice Donor (50 bp default)'),
-        ('splice acceptor', 'Splice Acceptor (50 bp default)'),
+        # ('upstream', 'Upstream (10k bp default) set'),
+        ('upstream', mark_safe('Upstream (10k bp default) set to <input type="text" size="3" method="post" placeholder="10" id="upstream_user_input"> k bp')),
+        ('downstream', mark_safe('Downstream (10k bp default) set to <input type="text" size="3" method="post" placeholder="10" id="downstream_user_input"> k bp')),
+        ('splice donor', mark_safe('Splice Donor (50 bp default) set to <input type="text" size="3" method="post" placeholder="50" id="splice_donor_input"> bp')),
+        ('splice acceptor', mark_safe('Splice Acceptor (50 bp default) set to <input type="text" size="3" method="post" placeholder="50" id="splice_acceptor_input"> bp')),
+        # ('splice donor', 'Splice Donor (50 bp default)'),
+        # ('splice acceptor', 'Splice Acceptor (50 bp default)'),
         ('intron', 'Intron'),
     ]
 
