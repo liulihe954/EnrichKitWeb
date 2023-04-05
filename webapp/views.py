@@ -13,8 +13,6 @@ import ssl
 import certifi
 import re
 from urllib.request import urlopen
-
-
 from operator import itemgetter
 import pandas as pd
 import numpy as np
@@ -27,6 +25,7 @@ from webapp.myforms import My_idmap_Form, My_Loci_Form, My_ORA_Form, My_Loci_Agg
 from webapp.run_loci import loci_match_unit, handle_loci_long_request
 from webapp.run_ora import ora_each_path, ora_each_db, handle_ora_long_request
 from webapp.run_aggreg import handle_loci_aggreg_request
+from webapp.run_gsea import handle_gsea_request
 from webapp.push_s3 import push_s3
 from webapp.process_results import process_results
 from webapp.register_job import register_job
@@ -34,16 +33,10 @@ from webapp.register_job import register_job
 # from asgiref.sync import sync_to_async
 # import asyncio
 
-
 # Create your views here.
-
-# show info
 
 def show_info(request):
     return render(request, 'index.html')
-
-# show contact
-
 
 def show_contacts(request):
     return render(request, 'contacts.html')
@@ -56,8 +49,8 @@ def id_map(request):
         cur_species = request.POST.get('species')
         cur_type = request.POST.get('gene_type')
 
-        print('cur_species - ', cur_species)
-        print('cur_type - ', cur_type)
+        # print('cur_species - ', cur_species)
+        # print('cur_type - ', cur_type)
         
         if len(request.FILES) > 0:
             cur_gene_list = []
@@ -66,12 +59,12 @@ def id_map(request):
         else:
             cur_gene_list = request.POST.get('input_gene_list').split('\r\n')
 
-        print('cur_gene_list- ', cur_gene_list)
+        # print('cur_gene_list- ', cur_gene_list)
 
         if len(cur_gene_list[-1]) == 0:
             cur_gene_list = cur_gene_list[:-1]
         
-        print('cur_gene_list- ', cur_gene_list)
+        # print('cur_gene_list- ', cur_gene_list)
         
         # register job
         jobid = register_job(user_email, cur_species, cur_type, cur_gene_list)
@@ -99,7 +92,7 @@ def id_map(request):
             ['id', 'Species', 'Ensembl Id', 'Ensembl Symbol', 'Entrez ID', 'NCBI Symbol','VGNC ID', 'VGNC Symbol', 'HGNC Orthologs', 'Human Ensembl ID', 'Human Entrez ID', 'HGNC Symbol'],
             jobid, '')
         # target_url = 'some test url'
-        print(list(queryset.values()))
+        # print(list(queryset.values()))
         return render(request, 'idmap_out.html', {'queryset': queryset, 'missing_count': [missing_item_count], 'target_url': target_url})
 
     if request.method == 'GET':
@@ -200,6 +193,8 @@ def loci_aggreg(request):
         cur_methods_list = request.POST.getlist('input_methods_list')
         user_email = request.POST.getlist('email')
 
+        if user_email[0] == '':
+            return render(request, 'long_running_reminder.html')
         #
         if len(request.FILES) > 0:
             cur_loci_list = []
@@ -330,16 +325,18 @@ def run_ora(request):
 
 @csrf_exempt
 def run_gsea(request):
-    template = 'ora.html'
     if request.method == 'POST':
         print('received post ')
-        
+
         err_message = 'INVALID FORMAT. PLEASE DOUBLE CHECK.'
         no_email_message = 'You have submitted a potential long-running job. \n Please provide you email address.'
 
         cur_species = request.POST.get('species')
         cur_db_list = request.POST.getlist('input_db_list')
         user_email = request.POST.getlist('email')
+
+        if user_email[0] == '':
+            return render(request, 'long_running_reminder.html')
 
         if len(request.FILES) > 0:
             cur_gene_list = []
@@ -348,57 +345,46 @@ def run_gsea(request):
         else:
             cur_gene_list = request.POST.get('input_gene_list').rstrip().split('\r\n')
 
-        if len(cur_gene_list) == 0:
-            cur_gene_list = cur_gene_list[:-1]
+        # if len(cur_gene_list) == 0:
+        #     cur_gene_list = cur_gene_list[:-1]
+        
+        # print(cur_gene_list[:10])
 
-        # reject long input
-        if (len(cur_db_list) > 1 or 'msigdb' in cur_db_list) and user_email[0] == '':
-            return render(request, 'long_running_reminder.html')
-
-        # process input gene list
-        sig_gene = []
-        total_gene = []
+        # # process input gene list
+        out_gene_list = []
+        out_rank_list = []
         for item in cur_gene_list:
             try:
                 tmp_gene_id = item.split(',')[0]
-                tmp_gene_sig = int(item.split(',')[1])
+                tmp_logcf = float(item.split(',')[1])
+                tmp_p = float(item.split(',')[2])
+                out_gene_list.append(tmp_gene_id)
+                out_rank_list.append(-np.log10(tmp_p) * tmp_logcf)
             except Exception:
                 return render(request, template, {'err': err_message})
             #
-            total_gene.append(tmp_gene_id)
-            if int(tmp_gene_sig) == 1:
-                sig_gene.append(tmp_gene_id)
-            # dedup
-            sig_gene = list(set(sig_gene))
-            total_gene = list(set(total_gene))
-
-        output_all = []
         
-        # print('cur_db_list ', cur_db_list)
-
-        # register job
+        # # register job
         jobid = register_job(user_email[0], cur_species, cur_db_list, cur_gene_list)
 
-        # deal with input
-        if len(cur_db_list) == 1 and 'msigdb' not in cur_db_list: # 
+        # # # deal with input
+        # if len(cur_db_list) == 1 and 'msigdb' not in cur_db_list: # 
 
-            output_all = ora_each_db(cur_species, cur_db_list[0], sig_gene, total_gene)
-            target_url = push_s3(
-                output_all,
-                ['Term ID', 'Source', 'Term Description', 'DB_Loss Total', 'DB_Loss Sig', 'Sig Gene Count', 'Total Gene Count', 'Hit Percentage', 'P value', 'Hit Gene List'],
-                jobid, '')
-            return render(request, 'ora_out.html', {'output': output_all, 'target_url': target_url})
+        #     output_all = ora_each_db(cur_species, cur_db_list[0], sig_gene, total_gene)
+        #     target_url = push_s3(
+        #         output_all,
+        #         ['Term ID', 'Source', 'Term Description', 'DB_Loss Total', 'DB_Loss Sig', 'Sig Gene Count', 'Total Gene Count', 'Hit Percentage', 'P value', 'Hit Gene List'],
+        #         jobid, '')
+        #     return render(request, 'ora_out.html', {'output': output_all, 'target_url': target_url})
 
-        else:
-            out = handle_ora_long_request.delay(cur_db_list, cur_species, sig_gene, total_gene, jobid, user_email[0])
-
-            # print('seeking id from main ', out.id)
+        # else:
+        out = handle_gsea_request.delay(cur_db_list, cur_species, out_gene_list, out_rank_list, jobid, user_email[0])
             
-            return render(request, 'ora_out_async.html', {'jobid': jobid, 'user_email': user_email[0]})
+        return render(request, 'ora_out_async.html', {'jobid': jobid, 'user_email': user_email[0]})
 
     if request.method == 'GET':
         form = My_ORA_Form()
-        return render(request, template, {'form': form})
+        return render(request, 'gsea.html', {'form': form})
 
 
 def show_results(request):
@@ -422,7 +408,4 @@ def show_results(request):
 
         header, processed_results, did_cut = process_results(results)
 
-        if len(results[0]) == 10:
-            return render(request, 'show_results_ora.html', {'header': header, 'output': processed_results, 'target_url': tmp_url,'did_cut': did_cut})
-        else:
-            return render(request, 'show_results_loci.html', {'header': header, 'output': processed_results, 'target_url': tmp_url,'did_cut': did_cut})
+        return render(request, 'show_results.html', {'header': header, 'output': processed_results, 'target_url': tmp_url,'did_cut': did_cut})

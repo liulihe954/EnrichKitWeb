@@ -47,25 +47,17 @@
       <table id="table" class="hover row-border stripe">
         <thead>
           <tr style="background: #dbdbdb; color: rgb(6, 6, 6)">
-            <th>{{header.0}}</th>
-            <th>{{header.1}}</th>
-            <th>{{header.2}}</th>
-            <th>{{header.5}}</th>
-            <th>{{header.6}}</th>
-            <th>{{header.7}}</th>
-            <th>{{header.8}}</th>
+            {% for item in header %}
+              <th>{{item}}</th>
+            {% endfor %}
           </tr>
         </thead>
         <tbody>
           {% for obj in output %}
           <tr>
-            <th style="font-weight: normal">{{obj.0}}</th>
-            <th style="font-weight: normal">{{obj.1}}</th>
-            <th style="font-weight: normal">{{obj.2}}</th>
-            <th style="font-weight: normal">{{obj.5}}</th>
-            <th style="font-weight: normal">{{obj.6}}</th>
-            <th style="font-weight: normal">{{obj.7}}</th>
-            <th style="font-weight: normal">{{obj.8}}</th>
+            {% for item in obj %}
+              <th style="font-weight: normal">{{item}}</th>
+            {% endfor %}
           </tr>
           {% endfor %}
         </tbody>

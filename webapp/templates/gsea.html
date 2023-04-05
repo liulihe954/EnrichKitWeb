@@ -1,10 +1,10 @@
-{% extends 'layout.html' %} {% block ora_nav %}
+{% extends 'layout.html' %} {% block gsea %}
 <li class="active">
-  <a href="/ora"><span class="fa fa-calculator mr-3"></span> ORA</a>
+  <a href="/gsea"><span class="fa fa-calculator mr-3"></span> GSEA </a>
 </li>
 {% endblock %} {% block content %}
 
-<h1 class="display-5">Over-Representation Analysis</h1>
+<h1 class="display-5"> Gene Set Enrichment Analysis (GSEA) </h1>
 <p class="lead">
   Perform an over-representation analysis of biological pathways (gene sets)
   given two gene lists (Significant Genes and Total Genes) using Fisher’s exact
@@ -35,12 +35,17 @@
   <div><h4>3. Input Gene List</h4></div>
   <div>
     <p>
-      The input has to have two columns. "Gene ID" and "Significant" (e.g. 1
-      means significant and 0 means not). <br />
+      The input has to have three columns - <a style="color:#000000">"Gene ID", "log2(FoldChange)" and "(adjusted) P-value"</a> seperated by comma. <br />
+      
+
       For example,<br />
-      ENSBTAG00000000005,1 <br />
-      ENSBTAG00000000012,0 <br />
+      ENSBTAG00000020936,0.652,0.00343 <br />
+      ENSBTAG00000005235,-1.394,0.00948 <br />
     </p>
+    <p>Ranking will be performed over a computed column: <a style="color:#000000">-log10(p-value) * log2(FoldChange)</a>.</p>
+
+    <p><a style="color:#000000"> Please retain ONLY significant genes. </a></p>
+
   </div>
   <div>{{form.input_gene_list}}</div>
   <div>{{form.input_gene_file}}</div>

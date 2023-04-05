@@ -16,11 +16,11 @@ def register_job(user_email, species, options, content):
     
     str_data = f.getvalue().encode('utf8')
 
-    print('type of str_data - ', type(str_data))
+    # print('type of str_data - ', type(str_data))
 
     content_file = ContentFile(str_data, name=str(jobid + ".txt"))
 
-    print('type of content_file - ', type(content_file))
+    # print('type of content_file - ', type(content_file))
 
     f.close()
 

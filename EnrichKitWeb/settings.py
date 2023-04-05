@@ -36,7 +36,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #True #
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'webapp',
     'django_celery_results',
     # 'debug_toolbar'
-    'django_celery_beat',
+    # 'django_celery_beat',
 ]
 
 # from .celery.conf import *
