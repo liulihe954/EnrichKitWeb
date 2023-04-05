@@ -50,7 +50,7 @@ def handle_loci_aggreg_request(cur_species, cur_methods_list, cur_chr_list, cur_
         aggreg_pvals_tmp = []
         for method in cur_methods_list:
             aggreg_pvals_tmp.append(aggregate(v, method))
-        tmp_row = [k, '/'.join([str(pval) for pval in v])]
+        tmp_row = [k, len(v) ,'/'.join([str(pval) for pval in v])]
         tmp_row.extend(aggreg_pvals_tmp)
         aggreg_list.append(tmp_row)
         
@@ -61,7 +61,7 @@ def handle_loci_aggreg_request(cur_species, cur_methods_list, cur_chr_list, cur_
     # # # step 2 push to s3
     target_url = push_s3(
         aggreg_list,
-        ['Gene ID', 'Raw P-values'] + cur_methods_list,
+        ['Gene ID', 'Hit Count','Raw P-values'] + cur_methods_list,
         jobid, children_list)
 
     # # # step 3 send email

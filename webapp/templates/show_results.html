@@ -47,17 +47,37 @@
       <table id="table" class="hover row-border stripe">
         <thead>
           <tr style="background: #dbdbdb; color: rgb(6, 6, 6)">
-            {% for item in header %}
+            <!-- {% for item in header %}
               <th>{{item}}</th>
-            {% endfor %}
+            {% endfor %} -->
+            <th>{{header.0}}</th>
+            <th>{{header.1}}</th>
+            <th>{{header.2}}</th>
+            <th>{{header.3}}</th>
+            <th>{{header.4}}</th>
+            <th>{{header.5}}</th>
+            <th>{{header.6}}</th>
+            <th>{{header.7}}</th>
+            <th>{{header.8}}</th>
+            <th>{{header.9}}</th>
           </tr>
         </thead>
         <tbody>
           {% for obj in output %}
           <tr>
-            {% for item in obj %}
+            <!-- {% for item in obj %}
               <th style="font-weight: normal">{{item}}</th>
-            {% endfor %}
+            {% endfor %} -->
+            <th style="font-weight: normal">{{obj.0}}</th>
+            <th style="font-weight: normal">{{obj.1}}</th>
+            <th style="font-weight: normal">{{obj.2}}</th>
+            <th style="font-weight: normal">{{obj.3}}</th>
+            <th style="font-weight: normal">{{obj.4}}</th>
+            <th style="font-weight: normal">{{obj.5}}</th>
+            <th style="font-weight: normal">{{obj.6}}</th>
+            <th style="font-weight: normal">{{obj.7}}</th>
+            <th style="font-weight: normal">{{obj.8}}</th>
+            <th style="font-weight: normal">{{obj.9}}</th>
           </tr>
           {% endfor %}
         </tbody>
@@ -83,9 +103,9 @@
     order: [[6, "asc"]],
     scrollY: "65vh",
     scrollCollapse: true,
+    responsive: true,
     paging: false,
   });
-
   $("#container").css("display", "block");
   table.columns.adjust().draw();
 </script>
