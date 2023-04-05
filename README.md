@@ -112,6 +112,17 @@ Note, if the current position failed to match any feature, "intergeneric or out 
 ### P-value Aggregation
 The goal of P-value aggregation is to combine a set of nucleotide-level signals to generate an single aggregated P-value for a proximal gene (within or near). Note we assume that the P-values P<sub>i</sub> are independent and uniformly distributed under their null hypotheses although the independence assumption may be violated because of linkage disequilibrium, for example, multiple SNPs in a single gene.
 
+
+Users are required to format the input as two columns, each line has an coordinate (chromosome_number:target_position, separated by a colon) and the corresponding p-value, separated by a cooma, no separator between lines, for example:
+
+```
+1:463898,0.000191647078100846
+1:546375,8.85740595294812e-05
+1:614361,0.000127657919937641
+1:1111720,6.8457022943699e-07
+1:1179832,0.00219076766797561
+```
+
 There are currently four methods available.
 
 - [Fisher's combination test](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.combine_pvalues.html)
@@ -119,8 +130,16 @@ There are currently four methods available.
 - [Simes' combination test](https://rdrr.io/cran/mppa/man/simes.test.html)
 - [The FDR method](https://www.statsmodels.org/dev/generated/statsmodels.stats.multitest.multipletests.html)
 
-Users can choose to apply multiple methods (extra methods will yield extra columns in the output).
+Users can choose to apply multiple methods (extra methods will yield extra columns in the output). 
 
+So, the returned results will 3-7 have columns:
+- Gene ID: the gene ID of a proximal gene
+- Hit Count: number of nucleotide-level signals aggregated to this gene
+- Raw P-values: a string concatenating all the raw p-values aggregated to this gene
+- fisher: (if applicable) Fisher’s combination test
+- sidak: (if applicable) Sidak’s combination test
+- simes: (if applicable) Simes’combination test
+- fdr: (if applicable) The FDR method
 
 ### Over-representation Analysis
 
@@ -164,6 +183,27 @@ The returned results will have 8 columns:
 
 ### Gene Set Enrichment Analysis
 Gene Set Enrichment Analysis (GSEA) is performed using the [gseapy](https://gseapy.readthedocs.io/en/latest/introduction.html) framework with livestock pathways (see [Data Source](#data-source)).
+
+Users are required to format the input as three columns, seperated by comma.
+
+'''gene_id,Log2(FoldChange),p-value'''
+
+the order of these three columns does matter, for example:
+
+```
+ENSBTAG00000002194,-0.529843085662032,3.18887850004967e-05
+ENSBTAG00000005800,-1.49866738848084,0.000336876395389863
+ENSBTAG00000002702,0.894283882451777,0.000718724154241965
+ENSBTAG00000006383,2.31486833638366,0.000772689790396651
+ENSBTAG00000018882,1.95045768210885,0.00142763637463762
+ENSBTAG00000022120,-1.28920376411761,0.00181152828637437
+ENSBTAG00000052977,-0.534900481867232,0.00244685100292273
+ENSBTAG00000008097,-1.01448210790555,0.00259403001061733
+ENSBTAG00000007492,-1.06690339614228,0.00333769283005199
+ENSBTAG00000020936,0.652578387288715,0.00342927087928419
+```
+
+Five pathway/annotation databases are currently integrated - Gene Ontology (GO), Interpro, KEGG, Reactome and Medical Subject Headings (MeSH). See [Data Source](#data-source)
 
 The output format largely inherits gseapy output [format](https://gseapy.readthedocs.io/en/latest/run.html).
 - Term ID: pathway/term ID
