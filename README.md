@@ -17,7 +17,7 @@
 - [Functions and Usage](#functions-and-usage)
   - [ID Conversion](#id-conversion)
   - [Genomic Coordinates Matching](#genomic-coordinates-matching)
-  - [P-value Aggregation (nucleotide to gene)](#p-value-aggregation)
+  - [P-value Aggregation (nucleotide to gene)](#p-value-aggregation-(nucleotide-to-gene))
   - [Over-Representation Analysis](#over-representation-analysis)
   - [Gene Set Enrichment Analysis](#gene-set-enrichment-analysis)
 - [Data Source](#data-source)
