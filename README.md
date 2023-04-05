@@ -189,7 +189,6 @@ Users are required to format the input as three columns, seperated by comma.
 ```
 gene_id,Log2(FoldChange),p-value
 ```
-
 the order of these three columns does matter, for example:
 
 ```
@@ -204,6 +203,8 @@ ENSBTAG00000008097,-1.01448210790555,0.00259403001061733
 ENSBTAG00000007492,-1.06690339614228,0.00333769283005199
 ENSBTAG00000020936,0.652578387288715,0.00342927087928419
 ```
+
+Note - please ONLY provide the "significant" genes.
 
 Five pathway/annotation databases are currently integrated - Gene Ontology (GO), Interpro, KEGG, Reactome and Medical Subject Headings (MeSH). See [Data Source](#data-source)
 
