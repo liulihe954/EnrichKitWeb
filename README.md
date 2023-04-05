@@ -186,7 +186,9 @@ Gene Set Enrichment Analysis (GSEA) is performed using the [gseapy](https://gsea
 
 Users are required to format the input as three columns, seperated by comma.
 
-'''gene_id,Log2(FoldChange),p-value'''
+```
+gene_id,Log2(FoldChange),p-value
+```
 
 the order of these three columns does matter, for example:
 
