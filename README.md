@@ -42,7 +42,7 @@ Previously, EnrichKit was known in the form of [R package](https://github.com/li
 
 Currently, there are five functions available. An overview of our workflow:
 
-<img align="center" src="./static/img/enrichkit-workflow.png" alt=" " width="15%" /> &nbsp;
+<img align="center" src="./static/img/enrichkit-workflow.png" alt=" " width="100%" /> &nbsp;
 
 ### ID Conversion
 
