@@ -204,7 +204,7 @@ ENSBTAG00000007492,-1.06690339614228,0.00333769283005199
 ENSBTAG00000020936,0.652578387288715,0.00342927087928419
 ```
 
-Note - please ONLY provide the "significant" genes.
+<!-- Note - please ONLY provide the "significant" genes. -->
 
 Ranking will be performed over a computed column: -log10(p-value) * log2(FoldChange).
 
