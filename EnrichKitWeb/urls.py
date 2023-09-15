@@ -46,6 +46,8 @@ urlpatterns = [
     path('loci_aggreg/', views.loci_aggreg),
     path('gsea/', views.run_gsea),
 
+    path('tf/', views.run_tf_enrich),
+
     # contacts
     path('contacts/', views.show_contacts),
 

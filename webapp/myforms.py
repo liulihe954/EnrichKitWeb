@@ -137,6 +137,51 @@ class My_ORA_Form(forms.Form):
         label=('Enter your new email'), required=False)
 
 
+class My_TF_Form(forms.Form):
+    # SPECIES
+    SPECIES_CHOICES = (
+        ('bta', 'Cow - Bos Taurus ARS-UCD1.2'),
+        ('cap', 'Goat - Capra_hircus ARS1.107'),
+        ('ovi', 'Sheep - Ovis_aries Oar_v3.1.107'),
+        ('gal', 'Chicken - Gallus_gallus gca000002315v5.GRCg6a.107'),
+        ('sus', 'Pig - Sus_scrofa Sscrofa11.1.107'),
+        ('equ', 'Horse - Equus_caballus EquCab3.0.107'),
+    )
+    DB_CHOICES = [
+        ('ENCODE', 'ENCODE (2012) - 157 TF'),
+        ('ITFP', 'ITFP(2008 - 1974 TF'),
+        ('Marbach2016', 'Marbach(2016) - 643 TF'),
+        ('TRED', 'TRED(2007) - 133 TF'),
+        ('TRRUST', 'TRRUST(2015) - 748 TF'),
+        # ('msigdb', 'Molecular Signatures Database (MSigDB)'),
+    ]
+
+    species = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={'class': 'btn-lg btn-secondary'}),  # btn btn-secondary dropdown-toggle
+        choices=SPECIES_CHOICES
+    )
+
+    # input_db_test = forms.BooleanField()
+
+    input_db_list = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'h5'}),
+        choices=DB_CHOICES,
+        initial=[c[0] for c in DB_CHOICES])
+
+    input_gene_list = forms.CharField(required=False,
+                                      label="", help_text="",
+                                      widget=forms.Textarea(attrs={'rows': 10, 'cols': 60, 'style': 'resize:none;'}))
+
+    input_gene_file = forms.FileField(required=False)
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-input'}),
+        label=('Enter your new email'), required=False)
+
+
+
+
 class My_Loci_Aggreg_Form(forms.Form):
     # SPECIES
     SPECIES_CHOICES = (

@@ -139,6 +139,16 @@ class Pathway(models.Model):
         return self.pathway_id
 
 
+class TF_Gene(models.Model):
+    """ tf_targets.txt TF and target genes"""
+    source = models.TextField()
+    TF = models.TextField()
+    Gene = models.TextField()
+
+    def __str__(self) -> str:
+        return str(self.source + ' - ' + self.TF)
+
+
 class Involve(models.Model):
     """ involve.txt  schema"""
     ek_gene = models.ForeignKey(to='ID_Mapper', to_field='ek_gene_id', on_delete=models.CASCADE, default=-1)
