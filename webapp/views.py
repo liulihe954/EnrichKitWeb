@@ -384,7 +384,7 @@ def run_gsea(request):
         # else:
         out = handle_gsea_request.delay(cur_db_list, cur_species, out_gene_list, out_rank_list, jobid, user_email[0])
             
-        return render(request, 'ora_out_async.html', {'jobid': jobid, 'user_email': user_email[0]})
+        return render(request, 'gsea_out_async.html', {'jobid': jobid, 'user_email': user_email[0]})
 
     if request.method == 'GET':
         form = My_ORA_Form()

@@ -30,9 +30,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-0(jsk9l1*0y$j1#-e+sr6e*ycqm&*s#gp7gil)llwv-nvpu2xi' #os.environ.get('EK_DJANGO_SECRET_KEY')
 SECRET_KEY = env('SECRET_KEY')
-# SECRET_KEY = os.environ.get('EK_DJANGO_SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -59,7 +57,7 @@ INSTALLED_APPS = [
 CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
 
 INTERNAL_IPS = [
-    env('EK_INTERNAL_IP')
+    '127.0.0.1'
 ]
 
 MIDDLEWARE = [

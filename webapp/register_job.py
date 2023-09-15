@@ -8,7 +8,7 @@ from django.core.files.base import ContentFile
 
 def register_job(user_email, species, options, content):
     jobid = str(uuid.uuid4())
-    url = "https://enrichkit-web-storage.s3.amazonaws.com/input/" + jobid + ".txt"
+    url = "https://enrichkit-aws-storage.s3.amazonaws.com/input/" + jobid + ".txt"
 
     # to stringIO
     f = StringIO()

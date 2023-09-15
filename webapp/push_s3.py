@@ -8,7 +8,7 @@ from io import StringIO
 def push_s3(content_list, header_list, jobid, list_of_workers):
     # print('list_of_workers passed in -', list_of_workers)
     #
-    url = "https://enrichkit-web-storage.s3.amazonaws.com/results/" + jobid + ".csv"
+    url = "https://enrichkit-aws-storage.s3.amazonaws.com/results/" + jobid + ".csv"
 
     # to stringIO
     f = StringIO()
