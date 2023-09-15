@@ -1,0 +1,37 @@
+{% extends 'layout.html' %} {% block tf_enrich %}
+<li class="active">
+  <a href="/tf"><span class="fas fa-key mr-3"></span> TF Enrich </a>
+</li>
+{% endblock %} {% block content %}
+<div
+  style="
+    background-color: #ececec;
+    height: 40px;
+    width: 140px;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <a href="/tf"
+    ><span style="color: black; font-size: 15pt"
+      ><i class="fa-solid fa-angle-left"></i> Go Back</span
+    ></a
+  >
+</div>
+<br />
+<br />
+
+<h3 style="color: rgba(5, 162, 34, 0.803)">
+  <i class="fa fa-check-circle" aria-hidden="true"></i> Your job has been
+  submitted.
+</h3>
+<br />
+<h5>Contact Email: {{user_email}}</h5>
+<h5>Job ID: {{jobid}}</h5>
+<br />
+<h4>We will get back to you soon!</h4>
+
+{% endblock %}

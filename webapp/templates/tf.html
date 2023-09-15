@@ -1,0 +1,81 @@
+{% extends 'layout.html' %} {% block tf_enrich %}
+<li class="active">
+  <a href="/tf"><span class="fas fa-key mr-3"></span> TF Enrich </a>
+</li>
+{% endblock %} {% block content %}
+
+<h1 class="display-5">Transcription Factors Enrichment Analysis</h1>
+<p class="lead">
+  Perform an over-representation analysis of TF-Gene regulation sets (a particular TF and its target genes) using humans dataset,
+  given two gene lists (Significant Genes and Total Genes) using Fisher’s exact
+  test.
+</p>
+{% if err %}
+<h2><p style="color: red">{{err}}</p></h2>
+{% endif %}
+<form
+  enctype="multipart/form-data"
+  action="."
+  role="form"
+  method="post"
+  id="service-form"
+>
+  {% csrf_token %}
+
+  <div><h4>1. Select Species</h4></div>
+
+  <div>{{form.species}}</div>
+
+  <br /><br />
+  <div><h4>2. Select Transcription Factors Source</h4></div>
+
+  <div>{{form.input_db_list}}</div>
+
+  <br /><br />
+  <div><h4>3. Input Gene List</h4></div>
+  <div>
+    <p>
+      The input has to have two columns - <a style="color:#000000">"Gene ID" and "Significant"</a> (e.g. 1
+      means significant and 0 means not) seperated by comma. <br />
+      For example,<br />
+      ENSBTAG00000000005,1 <br />
+      ENSBTAG00000000012,0 <br />
+    </p>
+  </div>
+  <div>{{form.input_gene_list}}</div>
+  <div>{{form.input_gene_file}}</div>
+  <br />
+  <div><h4>4. Contact Information</h4></div>
+  <p>
+    To reduce waiting time, we would offer potential long-running jobs to our
+    task queue. <br />
+    Please provide your email address to get notification about your
+    analysis.<br />
+  </p>
+  <div>{{form.email}}</div>
+
+  <br />
+  {% if not err %}
+  <div style="position: relative; z-index: 4000">
+    <input type="submit" class="btn btn-info" value="START" />
+  </div>
+  {% endif %}
+</form>
+<script>
+  const form = document.getElementById("service-form");
+  form.addEventListener("submit", () => {
+    document.querySelector(".overlay").style.display = "inline";
+    document.querySelector(".loader").style.display = "inline";
+    fetch(".", {
+      method: "post",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({ message: document.querySelector("service-form") }),
+    });
+  });
+</script>
+{% endblock %}

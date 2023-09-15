@@ -1,0 +1,99 @@
+{% extends 'layout.html' %} {% block tf_enrich %}
+<li class="active">
+  <a href="/tf"><span class="fas fa-key mr-3"></span> TF Enrich </a>
+</li>
+{% endblock %} {% block content %}
+<div
+  style="
+    background-color: #ececec;
+    height: 40px;
+    width: 140px;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  "
+>
+  <a href="/tf"
+    ><span style="color: black; font-size: 15pt"
+      ><i class="fa-solid fa-angle-left"></i> Go Back</span
+    ></a
+  >
+</div>
+<br />
+<br />
+
+<div style="display: flex; justify-content: start; align-items: center">
+  <!-- <div style="text-align: center; border-radius: 6px; display: flex"> -->
+  <h1 class="display-5" style="margin-bottom: 0">Results</h1>
+</div>
+<br />
+<h3>
+  <div>
+    <a href="{{target_url}}" class="btn btn-primary btn-lg active" role="button"
+      >Download Results</a
+    >
+  </div>
+</h3>
+
+<div>
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+      <table id="table" class="hover row-border stripe">
+        <thead>
+          <tr style="background: #dbdbdb; color: rgb(6, 6, 6)">
+            <th>Term ID</th>
+            <th>Source</th>
+            <th>Term Description</th>
+            <th>Sig Gene Count</th>
+            <th>Total Gene Count</th>
+            <th>Hit Percentage</th>
+            <th>P value</th>
+            <!-- <th>Overlap Enum</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for obj in output %}
+          <tr>
+            <th style="font-weight: normal">{{obj.0}}</th>
+            <th style="font-weight: normal">{{obj.1}}</th>
+            <th style="font-weight: normal">{{obj.2}}</th>
+            <th style="font-weight: normal">{{obj.5}}</th>
+            <th style="font-weight: normal">{{obj.6}}</th>
+            <th style="font-weight: normal">{{obj.7}}</th>
+            <th style="font-weight: normal">{{obj.8}}</th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script
+  type="text/javascript"
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  crossorigin="anonymous"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
+></script>
+<script
+  type="text/javascript"
+  src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"
+></script>
+<script>
+  var table = $("#table").DataTable({
+    order: [[6, "asc"]],
+    scrollY: "65vh",
+    scrollCollapse: true,
+    paging: false,
+  });
+
+  $("#container").css("display", "block");
+  table.columns.adjust().draw();
+</script>
+{% endblock %}
