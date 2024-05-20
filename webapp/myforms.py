@@ -22,6 +22,7 @@ class My_Loci_Form(forms.Form):
     ]
     COMPUTATED_FEATURE_CHOICES = [
         # ('upstream', 'Upstream (10k bp default) set'),
+        ('TSS', 'Transcription Start Sites'),
         ('upstream', mark_safe('Upstream (10k bp default) set to <input type="text" size="3" method="post" placeholder="10" id="upstream_user_input"> k bp')),
         ('downstream', mark_safe('Downstream (10k bp default) set to <input type="text" size="3" method="post" placeholder="10" id="downstream_user_input"> k bp')),
         ('splice donor', mark_safe('Splice Donor (50 bp default) set to <input type="text" size="3" method="post" placeholder="50" id="splice_donor_input"> bp')),

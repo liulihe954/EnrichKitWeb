@@ -105,7 +105,7 @@ def loci_match(request):
     if request.method == 'POST':
         # handle_loci_file()
         output = []
-        long_running_thres = 100
+        long_running_thres = 0
         err_message = 'INVALID FORMAT. PLEASE DOUBLE CHECK.'
         no_email_message = 'You have submitted a potential long-running job. \n Please provide you email address.'
         #

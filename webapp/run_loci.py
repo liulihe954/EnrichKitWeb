@@ -22,7 +22,7 @@ def handle_loci_long_request(cur_species, cur_feature_list, cur_cfeature_list, c
     #     ).apply_async().get()
 
     with allow_join_result():
-        groups = loci_match_unit.chunks(itertools.zip_longest([cur_species] * len(cur_chr_list), [cur_feature_list] * len(cur_chr_list), [cur_cfeature_list] * len(cur_chr_list), cur_chr_list, cur_coord_list), 10).group().apply_async()
+        groups = loci_match_unit.chunks(itertools.zip_longest([cur_species] * len(cur_chr_list), [cur_feature_list] * len(cur_chr_list), [cur_cfeature_list] * len(cur_chr_list), cur_chr_list, cur_coord_list), 500).group().apply_async()
 
         children_list = [task for parents in groups.children for task in parents.as_list()[::-1]]
         
@@ -53,7 +53,6 @@ def handle_loci_long_request(cur_species, cur_feature_list, cur_cfeature_list, c
 
 @ shared_task
 def loci_match_unit(cur_species, cur_feature_list, cur_cfeature_list, cur_chr, cur_loci, upstream_length=10000):
-
     output = []
     query_count_local = 0
 
@@ -91,17 +90,19 @@ def loci_match_unit(cur_species, cur_feature_list, cur_cfeature_list, cur_chr, c
         feature_target = models.Feature.objects.select_related(
             'ek_gene').filter(ek_gene_id=cur_ek_gene_id).filter(start__lte=cur_loci).filter(end__gte=cur_loci).filter(feature__in=set(cur_feature_list))
         if feature_target.exists():
-            tmp_target = feature_target[0]
-            output.append([cur_chr, cur_loci, 'feature', tmp_target.feature, '', tmp_target.ek_gene.gene_id, tmp_target.gene_biotype, tmp_target.strand])
-            query_count_local += 1
+            for tmp_target in feature_target: # = feature_target[0]
+                output.append([cur_chr, cur_loci, 'feature', tmp_target.feature, '', tmp_target.ek_gene.gene_id, tmp_target.gene_biotype, tmp_target.strand])
+                query_count_local += 1
 
         # computed feature
         compute_feature_target = models.ComputedFeatures.objects.select_related(
             'ek_gene').filter(ek_gene_id=cur_ek_gene_id).filter(start__lte=cur_loci).filter(end__gte=cur_loci).filter(feature__in=set(cur_cfeature_list))
+        # print('compute_feature_target ------- ', compute_feature_target)
         if compute_feature_target.exists():
-            tmp_target = compute_feature_target[0]
-            output.append([cur_chr, cur_loci, 'computed feature', tmp_target.feature, '', tmp_target.ek_gene.gene_id, tmp_target.gene_biotype, tmp_target.strand])
-            query_count_local += 1
+            for tmp_target in compute_feature_target:
+                # print('length - -', type(tmp_target))
+                output.append([cur_chr, cur_loci, 'computed feature', tmp_target.feature, '', tmp_target.ek_gene.gene_id, tmp_target.gene_biotype, tmp_target.strand])
+                query_count_local += 1
 
         # check if not covered
         if query_count_local < 1:

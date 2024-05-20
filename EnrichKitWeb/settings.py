@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 ]
 
 # from .celery.conf import *
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
+CELERY_RESULT_BACKEND = 'django-db' #env('CELERY_RESULT_BACKEND')
 
 INTERNAL_IPS = [
     '127.0.0.1'
